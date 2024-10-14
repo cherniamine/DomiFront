@@ -1,0 +1,643 @@
+<html >
+
+<body class="custom" >
+
+<img src="assets/logo_SMI-removebg-preview.png" alt="Logo" class="logo">
+
+
+<section class="wizard-section">
+  <div align="center" >
+
+    <div class="col-lg-6 col-md-6">
+<!--      <div class="wizard-content-left d-flex justify-content-center align-items-center">-->
+<!--        <h1>Create Your Bank Account</h1>-->
+<!--      </div>-->
+    </div>
+    <div class="col-lg-6 col-md-6">
+      <div class="form-wizard">
+        <form action="" method="post" role="form">
+          <div class="form-wizard-header">
+            <p>Remplir tous les champs du formulaire pour passer à l'étape suivante</p>
+            <ul class="list-unstyled form-wizard-steps clearfix">
+              <li class="active"><span>1</span></li>
+              <li><span>2</span></li>
+              <li><span>3</span></li>
+              <li><span>4</span></li>
+              <li><span>5</span></li>
+              <li><span>6</span></li>
+
+
+            </ul>
+          </div>
+
+          <fieldset class="wizard-fieldset show" data-tab-content="PersonalInformation">
+            <h5>Données Demande</h5>
+
+            <div class="form-group">
+              <label for="natureDemande">Nature de la demande</label>
+              <select id="natureDemande" name="natureDemande" class="form-control" [(ngModel)]="depotDomiTitre.natureDemande">
+                <option *ngFor="let nature of natureDemandeOptions; let i = index" [value]="nature" [disabled]="i === 0">{{ nature }}</option>
+              </select>
+              <div class="wizard-form-error"></div>
+            </div>
+
+            <div class="form-group">
+              <label for="codeTitre">Code du titre</label>
+              <select id="codeTitre" name="codeTitre" class="form-control" [(ngModel)]="depotDomiTitre.codeTitre" (change)="updateCodPaysValues()">
+                <option *ngFor="let code of getCodeTitreOptions(); let i = index" [value]="code" [disabled]="i === 0">{{ code }}</option>
+              </select>
+              <div class="wizard-form-error"></div>
+            </div>
+
+            <div class="form-group">
+              <label for="noPieceClient">RNE</label>
+              <input type="text" name="noPieceClient" id="noPieceClient" class="form-control" [(ngModel)]="depotDomiTitre.noPieceClient" (change)="onNoPieceClientChange()" placeholder="Entrez le RNE">
+
+            </div>
+
+
+            <div class="form-group" *ngIf="nomPrenom">
+              <label for="nomPrenom">Nom et Prénom</label>
+              <button (click)="showDetails()" class="btn btn-info btn-sm ml-2">Détail</button>
+              <div id="nomPrenom">{{ nomPrenom }}</div>
+            </div>
+
+
+
+            <div class="form-group">
+              <label for="numeroCompte">Compte RIB</label>
+              <select class="form-control wizard-required" id="numeroCompte" [(ngModel)]="depotDomiTitre.numCompte" name="numCompte">
+                <option *ngFor="let rib of ribs" [value]="rib">{{ rib }}</option>
+              </select>
+              <div class="wizard-form-error"></div>
+            </div>
+
+            <div class="form-group">
+              <label>Totalement exportatrice :</label>
+              <div class="wizard-form-radio">
+                <input name="regimeSecteur" id="radioOui" type="radio" value="oui" [(ngModel)]="depotDomiTitre.regimeSecteurActivite">
+                <label for="radioOui">Oui</label>
+              </div>
+              <div class="wizard-form-radio">
+                <input name="regimeSecteur" id="radioNon" type="radio" value="non" [(ngModel)]="depotDomiTitre.regimeSecteurActivite">
+                <label for="radioNon">Non</label>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Activité principale/secondaire :</label>
+              <div class="wizard-form-radio">
+                <input name="activitePrincipaleSecondaire" id="radioPrincipale" type="radio" [value]="ActivitePrincipaleSecondaire.PRINCIPALE" [(ngModel)]="depotDomiTitre.activitePrincipaleSecondaire">
+                <label for="radioPrincipale">Principale</label>
+              </div>
+              <div class="wizard-form-radio">
+                <input name="activitePrincipaleSecondaire" id="radioSecondaire" type="radio" [value]="ActivitePrincipaleSecondaire.SECONDAIRE" [(ngModel)]="depotDomiTitre.activitePrincipaleSecondaire">
+                <label for="radioSecondaire">Secondaire</label>
+              </div>
+            </div>
+
+            <div class="form-group" *ngIf="depotDomiTitre.activitePrincipaleSecondaire === ActivitePrincipaleSecondaire.PRINCIPALE">
+              <label for="activitePrincipale">Activité principale</label>
+              <input type="text" class="form-control" id="activitePrincipale" placeholder="Activité principale" [(ngModel)]="depotDomiTitre.codeSecteurActivite" name="codeSecteurActivite">
+            </div>
+
+            <div class="form-group" *ngIf="depotDomiTitre.activitePrincipaleSecondaire === ActivitePrincipaleSecondaire.SECONDAIRE">
+              <label for="activiteSecondaire">Activité secondaire</label>
+              <input type="text" class="form-control" id="activiteSecondaire" placeholder="Activité secondaire" [(ngModel)]="depotDomiTitre.codeSecteurActiviteSec" name="codeSecteurActiviteSec">
+            </div>
+
+            <div class="form-group clearfix">
+              <button type="button" class="btn btn-primary" (click)="goToNextStep()">Suivant</button>
+            </div>
+          </fieldset>
+          <fieldset class="wizard-fieldset" data-tab-content="AccountInformation">
+            <h5 class="text-center">Données Facture</h5>
+
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label for="numeroFacture">Numéro facture</label>
+                <input type="text" class="form-control wizard-required" id="numeroFacture" placeholder="Numéro facture"
+                       [(ngModel)]="depotDomiTitre.numContratCom" name="numContratCom">
+                <div class="wizard-form-error"></div>
+              </div>
+              <div class="col-md-6">
+                <label for="dateFacture">Date facture</label>
+                <input type="date" class="form-control wizard-required" id="dateFacture" placeholder="Date facture"
+                       [(ngModel)]="depotDomiTitre.dateContratCom" name="dateContratCom">
+                <div class="wizard-form-error"></div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="modeLivraison">Mode de livraison</label>
+              <select id="modeLivraison" class="form-control wizard-required" placeholder="Sélectionnez le mode de livraison"
+                      [(ngModel)]="depotDomiTitre.codeModLiv" name="codeModLiv">
+                <option value="">Sélectionnez le mode de livraison</option>
+                <option *ngFor="let codeModLiv of allCodeModLivList" [value]="codeModLiv">{{ codeModLiv }}</option>
+              </select>
+              <div class="wizard-form-error"></div>
+            </div>
+
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label for="devise">Devise</label>
+                <select id="devise" class="form-control wizard-required" placeholder="Sélectionnez la devise"
+                        [(ngModel)]="depotDomiTitre.codeDevise" name="codeDevise">
+                  <option value="" disabled>Sélectionnez la devise</option>
+                  <option *ngFor="let codeDevise of codeDeviseList" [value]="codeDevise">{{ codeDevise }}</option>
+                </select>
+                <div class="wizard-form-error"></div>
+              </div>
+              <div class="col-md-6">
+                <label for="acompteAvance">Acompte/Avance</label>
+                <input type="number" class="form-control wizard-required" id="acompteAvance" placeholder="Acompte/Avance"
+                       [(ngModel)]="depotDomiTitre.acompte" name="acompte">
+                <div class="wizard-form-error"></div>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label for="montantPTFN">Montant PTFN (DVS)</label>
+                <input type="number" class="form-control wizard-required" id="montantPTFN" placeholder="Montant PTFN (DVS)"
+                       [(ngModel)]="depotDomiTitre.mntDvsPtfnFact" name="mntDvsPtfnFact">
+                <div class="wizard-form-error"></div>
+              </div>
+              <div class="col-md-6">
+                <label for="montantFOB">Montant FOB (DVS)</label>
+                <input type="number" class="form-control wizard-required" id="montantFOB" placeholder="Montant FOB (DVS)"
+                       [(ngModel)]="depotDomiTitre.mntDvsFobFact" name="mntDvsFobFact">
+                <div class="wizard-form-error"></div>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label for="nomFournisseur">Nom fournisseur</label>
+                <input type="text" class="form-control wizard-required" id="nomFournisseur" placeholder="Nom fournisseur"
+                       [(ngModel)]="depotDomiTitre.nomFournisseur" name="nomFournisseur">
+                <div class="wizard-form-error"></div>
+              </div>
+              <div class="col-md-6">
+                <label for="adresseFournisseur">Adresse fournisseur</label>
+                <input type="text" class="form-control wizard-required" id="adresseFournisseur" placeholder="Adresse fournisseur"
+                       [(ngModel)]="depotDomiTitre.adrFournisseur" name="adrFournisseur">
+                <div class="wizard-form-error"></div>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label for="nomClient">Nom client</label>
+                <input type="text" class="form-control wizard-required" id="nomClient" placeholder="Nom client"
+                       [(ngModel)]="depotDomiTitre.nomClient" name="nomClient">
+                <div class="wizard-form-error"></div>
+              </div>
+              <div class="col-md-6">
+                <label for="adresseClient">Adresse client</label>
+                <input type="text" class="form-control wizard-required" id="adresseClient" placeholder="Adresse client"
+                       [(ngModel)]="depotDomiTitre.adrClient" name="adrClient">
+                <div class="wizard-form-error"></div>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <div class="col-md-3">
+                <label for="paysOrigine">Pays d'origine</label>
+                <select id="paysOrigine" class="form-control wizard-required" placeholder="Sélectionnez le pays d'origine"
+                        [(ngModel)]="depotDomiTitre.codPayOrig" name="codPayOrig">
+                  <option value="">Sélectionnez le pays d'origine</option>
+                  <option *ngFor="let codePays of codePaysList" [value]="codePays">{{ codePays }}</option>
+                </select>
+                <div class="wizard-form-error"></div>
+              </div>
+              <div class="col-md-3">
+                <label for="paysAchat">Pays d'achat</label>
+                <select id="paysAchat" class="form-control wizard-required" placeholder="Sélectionnez le pays d'achat"
+                        [(ngModel)]="depotDomiTitre.codPayAch" name="codPayAch">
+                  <option value="">Sélectionnez le pays d'achat</option>
+                  <option *ngFor="let codePays of codePaysList" [value]="codePays">{{ codePays }}</option>
+                </select>
+                <div class="wizard-form-error"></div>
+              </div>
+              <div class="col-md-3">
+                <label for="paysProvenance">Pays de provenance</label>
+                <select id="paysProvenance" class="form-control wizard-required" placeholder="Sélectionnez le pays de provenance"
+                        [(ngModel)]="depotDomiTitre.codPayProv" name="codPayProv">
+                  <option value="">Sélectionnez le pays de provenance</option>
+                  <option *ngFor="let codePays of codePaysList" [value]="codePays">{{ codePays }}</option>
+                </select>
+                <div class="wizard-form-error"></div>
+              </div>
+              <div class="col-md-3">
+                <label for="paysDestination">Pays de destination</label>
+                <select id="paysDestination" class="form-control wizard-required"
+                        placeholder="Sélectionnez le pays de destination définitive"
+                        [(ngModel)]="depotDomiTitre.codePaysDestDef" name="codePaysDestDef">
+                  <option value="">Sélectionnez le pays de destination définitive</option>
+                  <option *ngFor="let codePays of codePaysList" [value]="codePays">{{ codePays }}</option>
+                </select>
+                <div class="wizard-form-error"></div>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <div class="col-md-3">
+                <label for="modeReglement">Mode de règlement</label>
+                <select id="modeReglement" class="form-control wizard-required" placeholder="Sélectionnez le mode de règlement"
+                        [(ngModel)]="depotDomiTitre.codeModReg" name="codeModReg">
+                  <option value="">Sélectionnez le mode de règlement</option>
+                  <option *ngFor="let codeModReg of allCodeModRegList" [value]="codeModReg">{{ codeModReg }}</option>
+                </select>
+                <div class="wizard-form-error"></div>
+              </div>
+              <div class="col-md-3">
+                <label for="delaisReglement">Délai de règlement</label>
+                <select id="delaisReglement" class="form-control wizard-required" placeholder="Sélectionnez le délai de règlement"
+                        [(ngModel)]="depotDomiTitre.codeDelReg" name="codeDelReg">
+                  <option value="">Sélectionnez le délai de règlement</option>
+                  <option *ngFor="let codeDelReg of allCodeDelRegList" [value]="codeDelReg">{{ codeDelReg }}</option>
+                </select>
+                <div class="wizard-form-error"></div>
+              </div>
+              <div class="col-md-3">
+                <label for="regimeStatistique">Régime statistique</label>
+                <select id="regimeStatistique" class="form-control wizard-required" placeholder="Sélectionnez le régime statistique"
+                        [(ngModel)]="depotDomiTitre.regimeStat" name="regimeStat">
+                  <option value="">Sélectionnez le régime statistique</option>
+                  <option *ngFor="let codeRegimeStat of allCodeRegimeStat" [value]="codeRegimeStat">{{ codeRegimeStat }}</option>
+                </select>
+                <div class="wizard-form-error"></div>
+              </div>
+              <div class="col-md-3">
+                <label for="nbrColis">Nombre de colis</label>
+                <input type="number" class="form-control wizard-required" id="nbrColis" placeholder="Nombre de colis"
+                       [(ngModel)]="depotDomiTitre.nbrColis" name="nbrColis">
+                <div class="wizard-form-error"></div>
+              </div>
+            </div>
+
+            <div class="form-group clearfix">
+              <button type="button" class="btn btn-secondary float-left" (click)="goToPreviousStep()">Précédent</button>
+              <button type="button" class="btn btn-primary float-right" (click)="goToNextStep2()">Suivant</button>
+            </div>
+          </fieldset>
+          <fieldset class="wizard-fieldset" data-tab-content="BankInformation">
+            <h5>Accord BCT/Assurance</h5>
+
+            <div class="form-group">
+              <label for="typeAccord">Type d'accord BCT</label>
+              <select id="typeAccord" class="form-control wizard-required" placeholder="Sélectionnez le type d'accord"
+                      [(ngModel)]="depotDomiTitre.typeAccordBct" name="typeAccordBct">
+                <option value="">Sélectionnez le type d'accord</option>
+                <option *ngFor="let typeAccordBct of typeAccordBctOptions" [value]="typeAccordBct">{{ typeAccordBct }}</option>
+              </select>
+              <div class="wizard-form-error"></div>
+            </div>
+
+            <div class="form-group">
+              <label for="numeroAccordBCT">Numéro d'accord BCT</label>
+              <select id="numeroAccordBCT" class="form-control wizard-required"
+                      placeholder="Sélectionnez le numéro d'accord BCT" [(ngModel)]="depotDomiTitre.numAccordBct"
+                      name="numAccordBct">
+                <option value="">Sélectionnez le numéro d'accord BCT</option>
+                <option *ngFor="let numAccordBct of allNumAccordBctList" [value]="numAccordBct">{{ numAccordBct }}</option>
+              </select>
+              <div class="wizard-form-error"></div>
+            </div>
+
+            <div class="form-group">
+              <label for="dateAccordBCT">Date d'accord BCT</label>
+              <select id="dateAccordBCT" class="form-control wizard-required"
+                      placeholder="Sélectionnez la date d'accord BCT" [(ngModel)]="depotDomiTitre.dateAccordBct"
+                      name="dateAccordBct">
+                <option value="">Sélectionnez la date d'accord BCT</option>
+                <option *ngFor="let date of allDateAccordBctList" [ngValue]="date">{{ date }}</option>
+              </select>
+              <div class="wizard-form-error"></div>
+            </div>
+
+            <div class="form-group">
+              <label for="numeroAssurance">Numéro d'assurance</label>
+              <input type="number" class="form-control wizard-required" id="numeroAssurance" placeholder="Numéro assurance"
+                     [(ngModel)]="depotDomiTitre.numCotunas" name="numCotunas">
+              <div class="wizard-form-error"></div>
+            </div>
+
+            <div class="form-group">
+              <label for="dateAssurance">Date d'assurance</label>
+              <input type="date" class="form-control wizard-required" id="dateAssurance" placeholder="Date assurance"
+                     [(ngModel)]="depotDomiTitre.dateCotunas" name="dateCotunas">
+              <div class="wizard-form-error"></div>
+            </div>
+
+            <div class="form-group clearfix">
+              <button type="button" class="btn btn-secondary" (click)="goToPreviousStep()">Précédent</button>
+              <button type="button" class="btn btn-primary" (click)="goToNextStep()">Suivant</button>
+            </div>
+          </fieldset>
+          <fieldset class="wizard-fieldset" data-tab-content="PaymentInformation">
+            <h5>Articles NGP</h5>
+
+            <!-- Bouton pour ajouter un nouvel NGP -->
+            <div class="form-group">
+              <button type="button" class="btn btn-primary mb-2" (click)="addDetailPDepotEntity()">Ajouter NGP</button>
+            </div>
+
+            <!-- Tableau pour afficher les détails NGP -->
+            <table>
+              <thead>
+              <tr>
+                <th>NGP</th>
+                <th>Montant NGP</th>
+                <th>Pays d'origine</th>
+                <th>Unité</th>
+                <th>Quantité NGP</th>
+                <th>Actions</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let detailPDepot of depotDomiTitre.detailPDepotEntitys; let i = index">
+                <td>
+                  <select class="form-control wizard-required" id="ngp{{ i }}" name="codeNgp" [(ngModel)]="detailPDepot.codeNgp">
+
+                    <option *ngFor="let codeNgp of allCodeNgpList" [value]="codeNgp">{{ codeNgp }}</option>
+                  </select>
+                  <div class="wizard-form-error"></div>
+                </td>
+
+                <td>
+                  <input type="number" class="form-control wizard-required" id="montantNGP{{ i }}" name="montantDvsNgp"  [(ngModel)]="detailPDepot.montantDvsNgp">
+                  <div class="wizard-form-error"></div>
+                </td>
+
+                <td>
+                  <select class="form-control wizard-required" id="paysOrigine{{ i }}" name="codePaysOrigNgp" [(ngModel)]="detailPDepot.codePaysOrigNgp">
+
+                    <option *ngFor="let codePays of codePaysList" [value]="codePays">{{ codePays }}</option>
+                  </select>
+                  <div class="wizard-form-error"></div>
+                </td>
+
+                <td>
+                  <select class="form-control wizard-required" id="unite{{ i }}" name="codeUnite" [(ngModel)]="detailPDepot.codeUnite">
+
+                    <option *ngFor="let codeUnite of allCodeUniteList" [value]="codeUnite">{{ codeUnite }}</option>
+                  </select>
+                  <div class="wizard-form-error"></div>
+                </td>
+
+                <td>
+                  <input type="number" class="form-control wizard-required" id="quantite{{ i }}" name="qteNgp"  [(ngModel)]="detailPDepot.qteNgp">
+                  <div class="wizard-form-error"></div>
+                </td>
+
+                <td>
+                  <button type="button" class="btn btn-danger" (click)="removeDetailPDepotEntity(i)">Supprimer NGP</button>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+
+            <!-- Boutons de navigation -->
+            <div class="form-group clearfix">
+              <button type="button" class="btn btn-secondary float-left" (click)="goToPreviousStep()">Précédent</button>
+<!--              <button type="button" class="btn btn-success float-right" (click)="createDepotDomiciliationTitre()">Soumettre</button>-->
+              <button type="button" class="btn btn-primary" (click)="goToNextStep()">Suivant</button>
+            </div>
+          </fieldset>
+          <fieldset class="wizard-fieldset" data-tab-content="Upload file">
+            <h5>Charger un fichier</h5>
+
+            <!-- Champ pour sélectionner un fichier -->
+            <div class="form-group">
+              <label for="fileUpload">Sélectionner un fichier :</label>
+              <input type="file" id="fileUpload" (change)="onFileSelected($event)" multiple>
+            </div>
+
+            <!-- Boutons de navigation -->
+            <div class="form-group clearfix">
+              <button type="button" class="btn btn-secondary float-left" (click)="goToPreviousStep()">Précédent</button>
+              <button type="button" class="btn btn-primary float-right" (click)="goToNextStep()">Suivant</button>
+            </div>
+          </fieldset>
+          <fieldset class="wizard-fieldset" data-tab-content="Vérification">
+            <h4>Vérification</h4>
+            <br>
+
+            <div class="row">
+              <div >
+                <h5>Données Demande</h5>
+                <ng-container *ngIf="showMore1">
+                <table>
+                  <tr>
+                    <td><label>Nature de la demande :</label></td>
+                    <td>{{ depotDomiTitre.natureDemande }}</td>
+                  </tr>
+                  <tr>
+                    <td><label>Code du titre :</label></td>
+                    <td>{{ depotDomiTitre.codeTitre }}</td>
+                  </tr>
+                  <tr>
+                    <td><label>RNE :</label></td>
+                    <td>{{ depotDomiTitre.noPieceClient }}</td>
+                  </tr>
+                  <tr>
+                    <td><label>Nom et Prénom :</label></td>
+                    <td>{{ nomPrenom }}</td>
+                  </tr>
+                  <tr>
+                    <td><label>Compte RIB :</label></td>
+                    <td>{{ depotDomiTitre.numCompte }}</td>
+                  </tr>
+                  <tr>
+                    <td><label>Totalement exportatrice :</label></td>
+                    <td>{{ depotDomiTitre.regimeSecteurActivite }}</td>
+                  </tr>
+                  <tr>
+                    <td><label>Activité principale/secondaire :</label></td>
+                    <td>{{ depotDomiTitre.activitePrincipaleSecondaire }}</td>
+                  </tr>
+                  <tr *ngIf="depotDomiTitre.activitePrincipaleSecondaire === ActivitePrincipaleSecondaire.PRINCIPALE">
+                    <td><label>Activité principale :</label></td>
+                    <td>{{ depotDomiTitre.codeSecteurActivite }}</td>
+                  </tr>
+                  <tr *ngIf="depotDomiTitre.activitePrincipaleSecondaire === ActivitePrincipaleSecondaire.SECONDAIRE">
+                    <td><label>Activité secondaire :</label></td>
+                    <td>{{ depotDomiTitre.codeSecteurActiviteSec }}</td>
+                  </tr>
+
+                </table>
+                </ng-container>
+                <span class="clickable-text" (click)="showMore1 = !showMore1">
+                    {{ showMore1 ? 'Afficher moins' : 'Afficher la suite' }}
+                </span>
+              </div>
+              <div >
+                <h5>Données Facture</h5>
+                <ng-container *ngIf="showMore">
+                <table>
+                  <tr>
+                    <td><label>Numéro facture :</label></td>
+                    <td>{{ depotDomiTitre.numContratCom }}</td>
+                  </tr>
+                  <tr>
+                    <td><label>Date facture :</label></td>
+                    <td>{{ depotDomiTitre.dateContratCom | date:'dd/MM/yyyy' }}</td>
+                  </tr>
+                  <tr>
+                    <td><label>Mode de livraison :</label></td>
+                    <td>{{ depotDomiTitre.codeModLiv }}</td>
+                  </tr>
+                  <tr>
+                    <td><label>Devise :</label></td>
+                    <td>{{ depotDomiTitre.codeDevise }}</td>
+                  </tr>
+                  <tr>
+                    <td><label>Acompte/Avance :</label></td>
+                    <td>{{ depotDomiTitre.acompte }}</td>
+                  </tr>
+                  <tr>
+                    <td><label>Montant PTFN (DVS) :</label></td>
+                    <td>{{ depotDomiTitre.mntDvsPtfnFact }}</td>
+                  </tr>
+                  <tr>
+                    <td><label>Montant FOB (DVS) :</label></td>
+                    <td>{{ depotDomiTitre.mntDvsFobFact }}</td>
+                  </tr>
+                  <tr>
+                    <td><label>Nom fournisseur :</label></td>
+                    <td>{{ depotDomiTitre.nomFournisseur }}</td>
+                  </tr>
+                  <tr>
+                    <td><label>Adresse fournisseur :</label></td>
+                    <td>{{ depotDomiTitre.adrFournisseur }}</td>
+                  </tr>
+                    <tr>
+                      <td><label>Nom client :</label></td>
+                      <td>{{ depotDomiTitre.nomClient }}</td>
+                    </tr>
+                    <tr>
+                      <td><label>Adresse client :</label></td>
+                      <td>{{ depotDomiTitre.adrClient }}</td>
+                    </tr>
+                    <tr>
+                      <td><label>Pays d'origine :</label></td>
+                      <td>{{ depotDomiTitre.codPayOrig }}</td>
+                    </tr>
+                    <tr>
+                      <td><label>Pays d'achat :</label></td>
+                      <td>{{ depotDomiTitre.codPayAch }}</td>
+                    </tr>
+                    <tr>
+                      <td><label>Pays de provenance :</label></td>
+                      <td>{{ depotDomiTitre.codPayProv }}</td>
+                    </tr>
+                    <tr>
+                      <td><label>Pays de destination :</label></td>
+                      <td>{{ depotDomiTitre.codePaysDestDef }}</td>
+                    </tr>
+                    <tr>
+                      <td><label>Mode de règlement :</label></td>
+                      <td>{{ depotDomiTitre.codeModReg }}</td>
+                    </tr>
+                    <tr>
+                      <td><label>Délai de règlement :</label></td>
+                      <td>{{ depotDomiTitre.codeDelReg }}</td>
+                    </tr>
+                    <tr>
+                      <td><label>Régime statistique :</label></td>
+                      <td>{{ depotDomiTitre.regimeStat }}</td>
+                    </tr>
+                    <tr>
+                      <td><label>Nombre de colis :</label></td>
+                      <td>{{ depotDomiTitre.nbrColis }}</td>
+                    </tr>
+
+                </table>
+                </ng-container>
+
+                <span class="clickable-text" (click)="showMore = !showMore">
+                    {{ showMore ? 'Afficher moins' : 'Afficher la suite' }}
+                </span>
+              </div>
+                <!-- Table pour les informations de l'accord BCT/Assurance -->
+                <div >
+                  <h5>Accord BCT/Assurance</h5>
+
+                  <ng-container *ngIf="showMore2">
+                  <table>
+
+                  <tr>
+                    <td><label>Type d'accord BCT :</label></td>
+                    <td>{{ depotDomiTitre.typeAccordBct }}</td>
+                  </tr>
+                  <tr>
+                    <td><label>Numéro d'accord BCT :</label></td>
+                    <td>{{ depotDomiTitre.numAccordBct }}</td>
+                  </tr>
+                  <tr>
+                    <td><label>Date d'accord BCT :</label></td>
+                    <td>{{ depotDomiTitre.dateAccordBct }}</td>
+                  </tr>
+                  <tr>
+                    <td><label>Numéro d'assurance :</label></td>
+                    <td>{{ depotDomiTitre.numCotunas }}</td>
+                  </tr>
+                  <tr>
+                    <td><label>Date d'assurance :</label></td>
+                    <td>{{ depotDomiTitre.dateCotunas }}</td>
+                  </tr>
+                </table>
+                  </ng-container>
+                  <span class="clickable-text" (click)="showMore2 = !showMore2">
+                    {{ showMore2 ? 'Afficher moins' : 'Afficher la suite' }}
+                </span>
+                </div>
+            </div>
+
+              <br>
+            <div class="row">
+              <h5>Données NGP</h5>
+
+              <table >
+                <thead>
+                <tr>
+                  <th>NGP</th>
+                  <th>Montant NGP</th>
+                  <th>Pays d'origine</th>
+                  <th>Unité</th>
+                  <th>Quantité NGP</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let detailPDepot of depotDomiTitre.detailPDepotEntitys; let i = index">
+                  <td>{{ detailPDepot.codeNgp }}</td>
+                  <td>{{ detailPDepot.montantDvsNgp }}</td>
+                  <td>{{ detailPDepot.codePaysOrigNgp }}</td>
+                  <td>{{ detailPDepot.codeUnite }}</td>
+                  <td>{{ detailPDepot.qteNgp }}</td>
+                </tr>
+                </tbody>
+              </table>
+
+            </div>
+
+
+            <!-- Boutons de navigation -->
+            <div class="form-group clearfix">
+              <button type="button" class="btn btn-secondary float-left" (click)="goToPreviousStep()">Précédent</button>
+              <button type="button" class="btn btn-success float-right" (click)="createDepotDomiciliationTitre()">Soumettre</button>
+            </div>
+          </fieldset>
+
+
+        </form>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+</body>
+</html>
